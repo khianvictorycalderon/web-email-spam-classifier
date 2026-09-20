@@ -1,5 +1,5 @@
 export interface CheckResponseProps {
-    message: string;
+    status: string;
 }
 
 interface FetchStateProps {

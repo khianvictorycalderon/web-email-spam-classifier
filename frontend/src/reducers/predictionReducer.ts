@@ -1,6 +1,5 @@
 export interface AIResponseProps {
     prediction: number;
-    message: string;
 }
 
 interface FetchStateProps {

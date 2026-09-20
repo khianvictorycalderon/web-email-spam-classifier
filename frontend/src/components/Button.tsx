@@ -2,10 +2,11 @@ interface ButtonProps {
     children: string;
     className?: string;
     disabled?: boolean;
+    onClick: () => void;
 }
 
 export default function Button({
-    children, className, disabled
+    children, className, disabled, onClick
 }: ButtonProps) {
     return (
         <button
@@ -18,6 +19,7 @@ export default function Button({
                 disabled:cursor-not-allowed
                 ${className}
             `}
+            onClick={onClick}
             disabled={disabled}
         >{children}</button>
     )
