@@ -4,7 +4,7 @@ export interface AIResponseProps {
 }
 
 interface FetchStateProps {
-    data: AIResponseProps;
+    data: AIResponseProps | null;
     loading: boolean;
     error: string | null;
 }
@@ -13,6 +13,12 @@ type ActionTypes =
     | { type: "FETCH_START" }
     | { type: "FETCH_SUCCESS", payload: AIResponseProps }
     | { type: "FETCH_ERROR", payload: string };
+
+export const predictInitialState: FetchStateProps = {
+    data: null,
+    loading: false,
+    error: null
+}
 
 export default function predictReducer(
     state: FetchStateProps,

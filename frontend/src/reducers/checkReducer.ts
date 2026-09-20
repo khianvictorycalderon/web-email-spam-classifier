@@ -3,7 +3,7 @@ export interface CheckResponseProps {
 }
 
 interface FetchStateProps {
-    data: CheckResponseProps;
+    data: CheckResponseProps | null;
     loading: boolean;
     error: string | null;
 }
@@ -12,6 +12,12 @@ type ActionTypes =
     | { type: "FETCH_START" }
     | { type: "FETCH_SUCCESS", payload: CheckResponseProps }
     | { type: "FETCH_ERROR", payload: string }
+
+export const checkInitialState: FetchStateProps = {
+    data: null,
+    loading: false,
+    error: null
+}
 
 export default function checkReducer (
     state: FetchStateProps,
