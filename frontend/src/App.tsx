@@ -27,8 +27,8 @@ export default function App() {
     try {
       const res = await axios.get(`${ENV.VITE_API_URL}/ai-service/health`);
       aiServerDispatch({ type: "FETCH_SUCCESS", payload: res.data });
-    } catch (e: unknown) {
-      aiServerDispatch({ type: "FETCH_ERROR", payload: e instanceof Error ? e.message : String(e)});
+    } catch (error: unknown) {
+      aiServerDispatch({ type: "FETCH_ERROR", payload: error instanceof Error ? error.message : String(error)});
     }
   }
 

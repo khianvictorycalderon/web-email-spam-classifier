@@ -4,18 +4,17 @@ from flask import Flask
 app = Flask(__name__)
 
 # Test
-@app.route("/")
+@app.route("/health")
 def home():
     return {
-        "message": "AI service is working!"
+        "status": "AI Service: Healthy"
     }, 200
 
-@app.route("/predict", method=["POST"])
+@app.route("/predict", methods=["POST"])
 def predict():
     return {
-        "prediction": 0.5, # Let's just pretend this is a real prediction for now.
-        "message": "Predicted successfully!"
-    }
+        "prediction": 0.5, # Let's just pretend this is a real prediction for now
+    }, 200
 
 # Your AI inferencing here...
 # For training, create a separate train.py or something similar then save the model.
