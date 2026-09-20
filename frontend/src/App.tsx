@@ -1,3 +1,5 @@
+import Button from "./components/Button";
+
 export default function App() {
   return (
     <main
@@ -26,23 +28,13 @@ export default function App() {
         <div
           className="flex flex-col lg:flex-row gap-2"
         >
-          <button
-            className="
-              cursor-pointer
-              px-12 py-2 rounded-md
-              bg-blue-600 text-white hover:bg-blue-500
-              trasition duration-300
-            "
-          >Check Server</button>
+          <Button
+            className="bg-blue-600 text-white hover:bg-blue-500"
+          >Check Server</Button>
 
-          <button
-            className="
-              cursor-pointer
-              px-12 py-2 rounded-md
-              bg-green-600 text-white hover:bg-green-500
-              trasition duration-300
-            "
-          >Check AI Service</button>
+          <Button
+            className="bg-green-600 text-white hover:bg-green-500"
+          >Check AI Service</Button>
         </div>
 
         <hr className="my-4" />
