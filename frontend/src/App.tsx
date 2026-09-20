@@ -1,6 +1,14 @@
+import { useReducer } from "react";
 import Button from "./components/Button";
+import checkReducer, { checkInitialState } from "./reducers/checkReducer";
+import predictReducer, { predictInitialState } from "./reducers/predictionReducer";
 
 export default function App() {
+
+  const [serverState, serverDispatch] = useReducer(checkReducer, checkInitialState);
+  const [aiServerState, aiServerDispatch] = useReducer(checkReducer, checkInitialState);
+  const [predictionState, predictionDispatch] = useReducer(predictReducer, predictInitialState);
+
   return (
     <main
       className="
