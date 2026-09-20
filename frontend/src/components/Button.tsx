@@ -13,6 +13,9 @@ export default function Button({
                 cursor-pointer
                 px-12 py-2 rounded-md
                 trasition duration-300
+                disabled:bg-neutral-400
+                disabled:text-neutral-700
+                disabled:cursor-not-allowed
                 ${className}
             `}
             disabled={disabled}
