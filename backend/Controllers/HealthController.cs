@@ -8,7 +8,7 @@ public class HealthController() : ControllerBase
     {
         return Ok(new
         {
-            Status = "Healthy"
+            Status = "Backend: Healthy"
         });
     }
 }
