@@ -13,7 +13,7 @@ type ActionTypes =
     | { type: "FETCH_SUCCESS", payload: CheckResponseProps }
     | { type: "FETCH_ERROR", payload: string }
 
-export default async function checkReducer (
+export default function checkReducer (
     state: FetchStateProps,
     action: ActionTypes
 ) {
