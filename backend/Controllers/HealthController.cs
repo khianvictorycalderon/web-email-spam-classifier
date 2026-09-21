@@ -29,7 +29,7 @@ public class HealthController() : ControllerBase
 
             res.EnsureSuccessStatusCode();
 
-            var parsed = await res.Content.ReadFromJsonAsync<AIHealthResponse>();
+            var parsed = await res.Content.ReadFromJsonAsync<AIHealthResponseDto>();
 
             return Ok(parsed);
         } catch (Exception)

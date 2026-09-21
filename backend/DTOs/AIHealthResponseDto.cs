@@ -1,6 +1,6 @@
 namespace backend.DTOs;
 
-public class AIHealthResponse
+public class AIHealthResponseDto
 {
     public string Status { get; set; } = "";
 }
