@@ -13,7 +13,7 @@ public class HealthController() : ControllerBase
         });
     }
 
-    [HttpGet("/ai-service/health")]
+    [HttpGet("/services/ai-service/health")]
     public async Task<IActionResult> TestAIServiceHealth(
         IConfiguration config
     )

@@ -41,7 +41,7 @@ export default function App() {
     predictionDispatch({ type: "FETCH_START" });
 
     try {
-      const res = await axios.post(`${ENV.VITE_API_URL}/ai-service/predict`, {
+      const res = await axios.post(`${ENV.VITE_API_URL}/services/ai-service/predict`, {
         emain_content: contentInput
       });
 
