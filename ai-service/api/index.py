@@ -1,6 +1,6 @@
 import os
 
-import joblib
+import tensorflow as tf
 
 from flask import Flask, request
 
@@ -13,14 +13,7 @@ MODEL_PATH = os.path.join(
     os.path.dirname(__file__),
     "..",
     "models",
-    "spam_classifier.joblib"
-)
-
-VECTORIZER_PATH = os.path.join(
-    os.path.dirname(__file__),
-    "..",
-    "models",
-    "tfidf_vectorizer.joblib"
+    "spam_classifier.keras"
 )
 
 
@@ -37,20 +30,9 @@ app = Flask(__name__)
 
 print("Loading spam classifier...")
 
-model = joblib.load(MODEL_PATH)
+model = tf.keras.models.load_model(MODEL_PATH)
 
 print("Spam classifier loaded successfully!")
-
-
-# -------------------------------------------------------------------------
-# LOAD VECTORIZER
-# -------------------------------------------------------------------------
-
-print("Loading TF-IDF vectorizer...")
-
-vectorizer = joblib.load(VECTORIZER_PATH)
-
-print("TF-IDF vectorizer loaded successfully!")
 
 
 # -------------------------------------------------------------------------
@@ -75,19 +57,15 @@ def predict():
 
     email_content = data["emailContent"]
 
-    # Convert the email text into TF-IDF features.
-    email_vectorized = vectorizer.transform(
-        [email_content]
-    )
+    # The TextVectorization layer is built into the model, so it accepts
+    # the raw email text directly - no separate vectorizer needed.
+    input_tensor = tf.constant([[email_content]])
 
-    # Get probabilities.
-    probabilities = model.predict_proba(
-        email_vectorized
-    )
+    probabilities = model.predict(input_tensor)
 
     # Probability of class 1 (spam).
-    spam_probability = probabilities[0][1]
+    spam_probability = float(probabilities[0][0])
 
     return {
-        "classification": float(spam_probability)
+        "classification": spam_probability
     }, 200

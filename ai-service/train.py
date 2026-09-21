@@ -3,11 +3,10 @@
 import argparse
 import os
 
-import joblib
+import numpy as np
 import pandas as pd
+import tensorflow as tf
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 
@@ -22,13 +21,14 @@ MODEL_DIR = "models"
 
 MODEL_SAVE_PATH = os.path.join(
     MODEL_DIR,
-    "spam_classifier.joblib"
+    "spam_classifier.keras"
 )
 
-VECTORIZER_SAVE_PATH = os.path.join(
-    MODEL_DIR,
-    "tfidf_vectorizer.joblib"
-)
+MAX_TOKENS = 10000
+SEQUENCE_LENGTH = 200
+EMBEDDING_DIM = 64
+EPOCHS = 15
+BATCH_SIZE = 32
 
 
 # -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ print(f"Loaded {len(data)} samples.")
 # EXTRACT FEATURES AND TARGET
 # -------------------------------------------------------------------------
 
-texts = data["text"]
+texts = data["text"].astype(str)
 labels = data["label"]
 
 
@@ -97,33 +97,61 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=labels
 )
 
+X_train = X_train.to_numpy()
+X_test = X_test.to_numpy()
+y_train = y_train.to_numpy()
+y_test = y_test.to_numpy()
+
 
 # -------------------------------------------------------------------------
 # TEXT VECTORIZATION
 # -------------------------------------------------------------------------
 
-print("Creating TF-IDF vectorizer...")
+print("Creating TextVectorization layer...")
 
-vectorizer = TfidfVectorizer(
-    lowercase=True,
-    stop_words="english",
-    max_features=10000
+vectorize_layer = tf.keras.layers.TextVectorization(
+    max_tokens=MAX_TOKENS,
+    standardize="lower_and_strip_punctuation",
+    output_mode="int",
+    output_sequence_length=SEQUENCE_LENGTH
 )
 
-X_train_vectorized = vectorizer.fit_transform(X_train)
-
-X_test_vectorized = vectorizer.transform(X_test)
+# Learn the vocabulary from the training texts only.
+vectorize_layer.adapt(X_train)
 
 
 # -------------------------------------------------------------------------
-# CREATE MODEL
+# BUILD MODEL
 # -------------------------------------------------------------------------
 
 print("Creating classifier...")
 
-model = LogisticRegression(
-    max_iter=1000
+# The TextVectorization layer is baked directly into the model, so the
+# saved model accepts raw strings as input (no separate vectorizer file
+# needs to be loaded/managed downstream).
+
+inputs = tf.keras.Input(shape=(1,), dtype=tf.string)
+
+x = vectorize_layer(inputs)
+x = tf.keras.layers.Embedding(
+    input_dim=MAX_TOKENS,
+    output_dim=EMBEDDING_DIM,
+    mask_zero=True
+)(x)
+x = tf.keras.layers.GlobalAveragePooling1D()(x)
+x = tf.keras.layers.Dense(32, activation="relu")(x)
+x = tf.keras.layers.Dropout(0.3)(x)
+outputs = tf.keras.layers.Dense(1, activation="sigmoid")(x)
+
+model = tf.keras.Model(inputs, outputs)
+
+model.compile(
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
 )
+
+model.summary()
 
 
 # -------------------------------------------------------------------------
@@ -132,9 +160,19 @@ model = LogisticRegression(
 
 print("Training model...")
 
+early_stopping = tf.keras.callbacks.EarlyStopping(
+    monitor="val_loss",
+    patience=3,
+    restore_best_weights=True
+)
+
 model.fit(
-    X_train_vectorized,
-    y_train
+    X_train,
+    y_train,
+    validation_split=0.1,
+    epochs=EPOCHS,
+    batch_size=BATCH_SIZE,
+    callbacks=[early_stopping]
 )
 
 
@@ -144,7 +182,8 @@ model.fit(
 
 print("Evaluating model...")
 
-predictions = model.predict(X_test_vectorized)
+probabilities = model.predict(X_test).ravel()
+predictions = (probabilities >= 0.5).astype(int)
 
 accuracy = accuracy_score(
     y_test,
@@ -168,24 +207,8 @@ print(
 
 print("Saving model...")
 
-joblib.dump(
-    model,
-    MODEL_SAVE_PATH
-)
-
-
-# -------------------------------------------------------------------------
-# SAVE VECTORIZER
-# -------------------------------------------------------------------------
-
-print("Saving TF-IDF vectorizer...")
-
-joblib.dump(
-    vectorizer,
-    VECTORIZER_SAVE_PATH
-)
+model.save(MODEL_SAVE_PATH)
 
 
 print("\nTraining complete!")
 print(f"Model saved to: {MODEL_SAVE_PATH}")
-print(f"Vectorizer saved to: {VECTORIZER_SAVE_PATH}")
