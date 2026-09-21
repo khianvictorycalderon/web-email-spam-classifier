@@ -26,7 +26,10 @@ Classify if email is spam or not based on its content with machine learning.
 3. Install all the necessary dependencies with `pip install -r requirements.txt`.
 4. Run `python -m flask --app api.index run --debug`.
 
-**NOTE**: Always run `python -m pip freeze > requirements.txt` or simply `pip freeze > requirements.txt` whenever installing a new package or library.
+**NOTES**: 
+- Always run `python -m pip freeze > requirements.txt` or simply `pip freeze > requirements.txt` whenever installing a new package or library.
+- Provide a new dataset in `ai-service/dataset/spam.csv` if you want to retrain the model.
+- Run `python train.py --overwrite` if you want to train a new model from scratch.
 
 ### Setup inside `backend` folder:
 1. Create `appsettings.Development.json` *(or `appsettings.json` for production)* file that contains:
