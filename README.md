@@ -1,6 +1,10 @@
 # Web-Based Email Spam Classifier
 Classify if email is spam or not based on its content with machine learning.
 
+### Previews
+![Preview 1](preview/preview_1.png)
+![Preview 2](preview/preview_2.png)
+
 ### Tech Stacks:
 - **Vite React (Typescript)**
 - **Tailwind CSS**
