@@ -13,7 +13,7 @@ def home():
 @app.route("/api/classify", methods=["POST"])
 def predict():
     return {
-        "classification": 0.5, # Let's just pretend this is a real prediction for now
+        "classification": 0.4726, # Let's just pretend this is a real prediction for now
     }, 200
 
 # Your AI inferencing here...

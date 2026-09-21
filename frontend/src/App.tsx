@@ -151,7 +151,7 @@ export default function App() {
 
               <p>Spam Probability: {
                 classificationState.data?.classification
-                && (classificationState.data.classification) * 100
+                && ((classificationState.data.classification) * 100).toFixed(2)
               }%</p>
             </>
           ) : null}
