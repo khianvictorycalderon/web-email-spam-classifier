@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import Button from "./components/Button";
 import checkReducer, { checkInitialState } from "./reducers/checkReducer";
 import predictReducer, { predictInitialState } from "./reducers/predictionReducer";
@@ -13,6 +13,8 @@ export default function App() {
   const [aiServerState, aiServerDispatch] = useReducer(checkReducer, checkInitialState);
   const [predictionState, predictionDispatch] = useReducer(predictReducer, predictInitialState);
 
+  const [contentInput, setContentInput] = useState<string>("");
+  
   const checkServerState = async () => {
     serverDispatch({ type: "FETCH_START" });
     try {
@@ -31,6 +33,23 @@ export default function App() {
     } catch (error: unknown) {
       aiServerDispatch({ type: "FETCH_ERROR", payload: error instanceof Error ? error.message : String(error)});
     }
+  }
+
+  const classifyEmailContent = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    predictionDispatch({ type: "FETCH_START" });
+
+    try {
+      const res = await axios.post(`${ENV.VITE_API_URL}/ai-service/predict`, {
+        emain_content: contentInput
+      });
+
+      predictionDispatch({ type: "FETCH_SUCCESS", payload: res.data });
+    } catch (e: unknown) {
+      predictionDispatch({ type:"FETCH_ERROR", payload: e instanceof Error ? e.message : String(e) });
+    }
+
   }
 
   return (
@@ -91,12 +110,15 @@ export default function App() {
 
         <form
           className="flex flex-col gap-4"
+          onSubmit={classifyEmailContent}
         >
           <div
             className="flex flex-col lg:flex-row gap-2 items-center justify-center"
           >
             <label>Email Content: </label>
             <input 
+              value={contentInput}
+              onChange={(e) => setContentInput(e.target.value)}
               type="text"
               className="
                 w-full
@@ -108,6 +130,25 @@ export default function App() {
               "
             />
           </div>
+
+          {predictionState.loading == false && predictionState.data || predictionState.error ? (
+            <p
+              className={`
+                font-bold text-xl
+                ${predictionState.data?.prediction
+                ? predictionState.data.prediction > 0.5
+                  ? "text-red-600"
+                  : "text-green-600"
+                : "text-yellow-500"}  
+              `}
+            >Classification: {
+              predictionState.data?.prediction
+              ? predictionState.data.prediction > 0.5
+                ? "Spam"
+                : "Not Spam"
+              : "Unknown or Failed"
+            }</p>
+          ) : null}
 
           <SubmitButtonInput>Classify</SubmitButtonInput>
         </form>
