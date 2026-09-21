@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.DTOs;
 
 [ApiController]
-public class HealthController() : ControllerBase
+public class MainController() : ControllerBase
 {
     [HttpGet("/health")]
     public IActionResult TestHealth()
