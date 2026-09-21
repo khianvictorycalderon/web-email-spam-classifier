@@ -3,6 +3,7 @@ import Button from "./components/Button";
 import checkReducer, { checkInitialState } from "./reducers/checkReducer";
 import predictReducer, { predictInitialState } from "./reducers/predictionReducer";
 import axios from "axios";
+import SubmitButtonInput from "./components/SubmitButtonInput";
 
 const ENV = import.meta.env;
 
@@ -88,22 +89,28 @@ export default function App() {
 
         <hr className="my-4" />
 
-        <div
-          className="flex flex-col lg:flex-row gap-2 items-center justify-center"
+        <form
+          className="flex flex-col gap-4"
         >
-          <label>Email Content: </label>
-          <input 
-            type="text"
-            className="
-              w-full
-              rounded-md p-2
-              focus:outline-blue-600
-              focus:bg-neutral-100
-              border-2
-              border-neutral-700
-            "
-          />
-        </div>
+          <div
+            className="flex flex-col lg:flex-row gap-2 items-center justify-center"
+          >
+            <label>Email Content: </label>
+            <input 
+              type="text"
+              className="
+                w-full
+                rounded-md p-2
+                focus:outline-blue-600
+                focus:bg-neutral-100
+                border-2
+                border-neutral-700
+              "
+            />
+          </div>
+
+          <SubmitButtonInput>Classify</SubmitButtonInput>
+        </form>
 
       </div>
       
