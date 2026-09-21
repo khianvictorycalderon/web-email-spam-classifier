@@ -37,4 +37,31 @@ public class HealthController() : ControllerBase
             return StatusCode(500, new {});
         }
     }
+
+    [HttpPost("api/ai-service/classify")]
+    public async Task<IActionResult> ClassifyEmail(
+        IConfiguration config,
+        [FromBody] UserRequestDto req
+    )
+    {
+        try
+        {
+            var aiUrl = config["Services:AI:Url"];
+            using var client = new HttpClient();
+
+            var res = await client.PostAsJsonAsync(
+                $"{aiUrl}/api/classify",
+                new { req.EmailContent }
+            );
+
+            res.EnsureSuccessStatusCode();
+
+            var parsed = await res.Content.ReadFromJsonAsync<AIClassificationDto>();
+
+            return Ok(parsed);
+        } catch (Exception)
+        {
+            return StatusCode(500, new {});
+        }
+    }
 }

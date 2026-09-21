@@ -10,10 +10,10 @@ def home():
         "status": "AI Service: Healthy"
     }, 200
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/classify", methods=["POST"])
 def predict():
     return {
-        "prediction": 0.5, # Let's just pretend this is a real prediction for now
+        "classification": 0.5, # Let's just pretend this is a real prediction for now
     }, 200
 
 # Your AI inferencing here...

@@ -11,7 +11,7 @@ export default function App() {
 
   const [serverState, serverDispatch] = useReducer(checkReducer, checkInitialState);
   const [aiServerState, aiServerDispatch] = useReducer(checkReducer, checkInitialState);
-  const [predictionState, predictionDispatch] = useReducer(predictReducer, predictInitialState);
+  const [classificationState, classificationDispatch] = useReducer(predictReducer, predictInitialState);
 
   const [contentInput, setContentInput] = useState<string>("");
   
@@ -28,7 +28,7 @@ export default function App() {
   const checkAIServerState = async () => {
     aiServerDispatch({ type: "FETCH_START" });
     try {
-      const res = await axios.get(`${ENV.VITE_API_URL}/ai-service/health`);
+      const res = await axios.get(`${ENV.VITE_API_URL}/services/ai-service/health`);
       aiServerDispatch({ type: "FETCH_SUCCESS", payload: res.data });
     } catch (error: unknown) {
       aiServerDispatch({ type: "FETCH_ERROR", payload: error instanceof Error ? error.message : String(error)});
@@ -38,16 +38,15 @@ export default function App() {
   const classifyEmailContent = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    predictionDispatch({ type: "FETCH_START" });
+    classificationDispatch({ type: "FETCH_START" });
 
     try {
-      const res = await axios.post(`${ENV.VITE_API_URL}/services/ai-service/predict`, {
+      const res = await axios.post(`${ENV.VITE_API_URL}/api/ai-service/classify`, {
         emain_content: contentInput
       });
-
-      predictionDispatch({ type: "FETCH_SUCCESS", payload: res.data });
+      classificationDispatch({ type: "FETCH_SUCCESS", payload: res.data });
     } catch (e: unknown) {
-      predictionDispatch({ type:"FETCH_ERROR", payload: e instanceof Error ? e.message : String(e) });
+      classificationDispatch({ type:"FETCH_ERROR", payload: e instanceof Error ? e.message : String(e) });
     }
 
   }
@@ -131,19 +130,19 @@ export default function App() {
             />
           </div>
 
-          {predictionState.loading == false && predictionState.data || predictionState.error ? (
+          {classificationState.loading == false && classificationState.data || classificationState.error ? (
             <p
               className={`
                 font-bold text-xl
-                ${predictionState.data?.prediction
-                ? predictionState.data.prediction > 0.5
+                ${classificationState.data?.classification
+                ? classificationState.data.classification > 0.5
                   ? "text-red-600"
                   : "text-green-600"
                 : "text-yellow-500"}  
               `}
             >Classification: {
-              predictionState.data?.prediction
-              ? predictionState.data.prediction > 0.5
+              classificationState.data?.classification
+              ? classificationState.data.classification > 0.5
                 ? "Spam"
                 : "Not Spam"
               : "Unknown or Failed"
