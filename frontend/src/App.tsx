@@ -69,9 +69,9 @@ export default function App() {
         <ul
           className="mt-4"
         >
-          {/* <li>Typescript React + Tailwind CSS (Frontend)</li>  
+          <li>Typescript React + Tailwind CSS (Frontend)</li>  
           <li>ASP.NET Core Web API (Backend)</li>
-          <li>Flask + Tensorflow (AI Service)</li> */}
+          <li>Flask + Tensorflow (AI Service)</li>
         </ul>
         <hr className="my-4" />
 
