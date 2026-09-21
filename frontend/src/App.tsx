@@ -144,8 +144,8 @@ export default function App() {
               >Classification: {
                 classificationState.data?.classification
                 ? classificationState.data.classification >= 0.5
-                  ? "Spam"
-                  : "Not Spam"
+                  ? "likely a spam"
+                  : "likely not a spam"
                 : "Unknown or Failed"
               }</p>
 
