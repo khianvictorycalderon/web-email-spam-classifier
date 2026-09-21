@@ -64,17 +64,6 @@ data = pd.read_csv(TRAINING_DATA_PATH)
 
 print(f"Loaded {len(data)} samples.")
 
-# Drop rows with missing text or label. Note: .astype(str) further below
-# does NOT reliably convert missing/NaN cells to the string "nan" on
-# recent pandas versions (string-dtype columns keep them as real NaN),
-# which crashes TextVectorization.adapt() with a mixed str/float array.
-# Dropping incomplete rows here avoids that entirely.
-rows_before = len(data)
-data = data.dropna(subset=["text", "label"])
-rows_dropped = rows_before - len(data)
-if rows_dropped:
-    print(f"Dropped {rows_dropped} rows with missing text/label.")
-
 
 # -------------------------------------------------------------------------
 # EXTRACT FEATURES AND TARGET
