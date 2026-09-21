@@ -149,7 +149,14 @@ export default function App() {
             }</p>
           ) : null}
 
-          <SubmitButtonInput>Classify</SubmitButtonInput>
+          <SubmitButtonInput
+            disabled={classificationState.loading}
+          >
+            {classificationState.loading
+              ? "Classifying..."
+              : "Classify"
+            }
+          </SubmitButtonInput>
         </form>
 
       </div>
