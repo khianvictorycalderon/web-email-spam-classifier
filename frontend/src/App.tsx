@@ -42,7 +42,7 @@ export default function App() {
 
     try {
       const res = await axios.post(`${ENV.VITE_API_URL}/api/ai-service/classify`, {
-        emain_content: contentInput
+        email_content: contentInput
       });
       classificationDispatch({ type: "FETCH_SUCCESS", payload: res.data });
     } catch (e: unknown) {
@@ -131,22 +131,29 @@ export default function App() {
           </div>
 
           {classificationState.loading == false && classificationState.data || classificationState.error ? (
-            <p
-              className={`
-                font-bold text-xl
-                ${classificationState.data?.classification
-                ? classificationState.data.classification > 0.5
-                  ? "text-red-600"
-                  : "text-green-600"
-                : "text-yellow-500"}  
-              `}
-            >Classification: {
-              classificationState.data?.classification
-              ? classificationState.data.classification > 0.5
-                ? "Spam"
-                : "Not Spam"
-              : "Unknown or Failed"
-            }</p>
+            <>
+              <p
+                className={`
+                  font-bold text-xl
+                  ${classificationState.data?.classification
+                  ? classificationState.data.classification >= 0.5
+                    ? "text-red-600"
+                    : "text-green-600"
+                  : "text-yellow-500"}  
+                `}
+              >Classification: {
+                classificationState.data?.classification
+                ? classificationState.data.classification >= 0.5
+                  ? "Spam"
+                  : "Not Spam"
+                : "Unknown or Failed"
+              }</p>
+
+              <p>Spam Probability: {
+                classificationState.data?.classification
+                && (classificationState.data.classification) * 100
+              }%</p>
+            </>
           ) : null}
 
           <SubmitButtonInput

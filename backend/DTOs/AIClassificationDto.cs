@@ -4,5 +4,5 @@ using System.Text.Json.Serialization;
 public class AIClassificationDto
 {
     [JsonPropertyName("classification")]
-    public string Classification { get; set; } = "";
+    public double Classification { get; set; }
 }
