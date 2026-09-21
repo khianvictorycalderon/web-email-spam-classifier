@@ -88,6 +88,23 @@ export default function App() {
 
         <hr className="my-4" />
 
+        <div
+          className="flex flex-col lg:flex-row gap-2 items-center justify-center"
+        >
+          <label>Email Content: </label>
+          <input 
+            type="text"
+            className="
+              w-full
+              rounded-md p-2
+              focus:outline-blue-600
+              focus:bg-neutral-100
+              border-2
+              border-neutral-700
+            "
+          />
+        </div>
+
       </div>
       
     </main>
