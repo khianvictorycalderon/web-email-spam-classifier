@@ -51,7 +51,7 @@ public class MainController() : ControllerBase
 
             var res = await client.PostAsJsonAsync(
                 $"{aiUrl}/api/classify",
-                new { req.EmailContent }
+                new { email_content = req.EmailContent }
             );
 
             res.EnsureSuccessStatusCode();

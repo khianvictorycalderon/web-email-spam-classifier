@@ -55,7 +55,7 @@ def predict():
 
     data = request.get_json()
 
-    email_content = data["emailContent"]
+    email_content = data["email_content"]
 
     # The TextVectorization layer is built into the model, so it accepts
     # the raw email text directly - no separate vectorizer needed.
